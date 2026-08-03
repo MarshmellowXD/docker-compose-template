@@ -1,0 +1,37 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - TZ=${TZ:-UTC}
+      - HOMEPAGE_ALLOWED_HOSTS=${HOMEPAGE_HOSTNAME?},homepage:3000,localhost:3000
+      - LOG_TARGETS=stdout
+    volumes:
+      - ${DOCKER_APP_DIR}/homepage/config:/app/config
+      - ${DOCKER_APP_DIR}/homepage/config/images:/app/public/images
+      - ${DOCKER_DATA_DIR}:/data:ro
+      - /sys:/sys:ro
+    depends_on:
+      socket-proxy:
+        condition: service_started
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.rule=Host(`${HOMEPAGE_HOSTNAME?}`)"
+      - "traefik.http.routers.homepage.entrypoints=websecure"
+      - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.homepage.middlewares=tinyauth@docker"
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - monitoring
+      - all

@@ -1,0 +1,88 @@
+services:
+  comet:
+    container_name: comet
+    image: g0ldyy/comet
+    restart: unless-stopped
+    dns: [1.1.1.1, 8.8.8.8]  # bypass local DNS so *.${DOMAIN} resolves to the public IP
+    expose:
+      - 2020
+    environment:
+      DATABASE_TYPE: ${DATABASE_TYPE:-postgresql}
+      DATABASE_URL: ${DATABASE_URL:-postgres://comet:${COMET_POSTGRES_PASSWORD?}@comet_postgres:5432/comet}
+    env_file:
+      - .env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.comet.rule=Host(`${COMET_HOSTNAME?}`)
+      - traefik.http.routers.comet.entrypoints=websecure
+      - traefik.http.routers.comet.tls.certresolver=letsencrypt
+      - traefik.http.routers.comet.middlewares=tinyauth@docker
+    volumes:
+      - ${DOCKER_DATA_DIR}/comet:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:2020/health').read()\" || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      comet_postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - aiostreams
+      - all
+
+  comet_postgres:
+    container_name: comet_postgres
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: comet
+      POSTGRES_PASSWORD: ${COMET_POSTGRES_PASSWORD?}
+      POSTGRES_DB: comet
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=128MB"
+      - "-c"
+      - "effective_cache_size=384MB"
+      - "-c"
+      - "maintenance_work_mem=64MB"
+      - "-c"
+      - "checkpoint_completion_target=0.9"
+      - "-c"
+      - "wal_buffers=8MB"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "effective_io_concurrency=200"
+      - "-c"
+      - "work_mem=8MB"
+      - "-c"
+      - "max_connections=100"
+    volumes:
+      - ${DOCKER_DATA_DIR}/comet/postgres:/var/lib/postgresql/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U comet -d comet"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - aiostreams
+      - all

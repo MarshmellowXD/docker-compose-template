@@ -1,0 +1,20 @@
+# Local environment overrides only — committed .env files contain placeholders
+.env.local
+
+# Runtime data
+data/
+postgres/
+apps/traefik/data/acme.json
+apps/traefik/access.log
+
+# Backups and scratch
+*.bak
+*.log
+*.sql
+*.swp
+*.tmp
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store

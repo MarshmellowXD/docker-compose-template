@@ -1,0 +1,104 @@
+services:
+  outline:
+    image: docker.getoutline.com/outlinewiki/outline:latest
+    container_name: outline
+    restart: unless-stopped
+    expose:
+      - 3000
+    env_file:
+      - .env
+    environment:
+      - SECRET_KEY=${OUTLINE_SECRET_KEY?}
+      - UTILS_SECRET=${OUTLINE_UTILS_SECRET?}
+      - DATABASE_URL=postgres://outline:${OUTLINE_POSTGRES_PASSWORD?}@outline_postgres:5432/outline
+      - PGSSLMODE=disable
+      - REDIS_URL=redis://outline_redis:6379
+      - URL=https://${OUTLINE_HOSTNAME?}
+      - PORT=3000
+      - FILE_STORAGE=local
+      - FILE_STORAGE_LOCAL_ROOT_DIR=/var/lib/outline/data
+      - FILE_STORAGE_UPLOAD_MAX_SIZE=26214400
+      # Pocket ID OIDC
+      - OIDC_CLIENT_ID=${OUTLINE_OIDC_CLIENT_ID?}
+      - OIDC_CLIENT_SECRET=${OUTLINE_OIDC_CLIENT_SECRET?}
+      - OIDC_AUTH_URI=https://${POCKET_ID_HOSTNAME?}/authorize
+      - OIDC_TOKEN_URI=https://${POCKET_ID_HOSTNAME?}/api/oidc/token
+      - OIDC_USERINFO_URI=https://${POCKET_ID_HOSTNAME?}/api/oidc/userinfo
+      - OIDC_USERNAME_CLAIM=email
+      - OIDC_DISPLAY_NAME=Login with Pocket ID
+      - OIDC_SCOPES=openid email profile
+      - FORCE_HTTPS=false
+      - ENABLE_UPDATES=false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.outline.rule=Host(`${OUTLINE_HOSTNAME?}`)"
+      - "traefik.http.routers.outline.entrypoints=websecure"
+      - "traefik.http.routers.outline.tls.certresolver=letsencrypt"
+      # No Tinyauth — Outline uses Pocket ID OIDC directly
+      - "traefik.http.services.outline.loadbalancer.server.port=3000"
+    volumes:
+      - ${DOCKER_DATA_DIR}/outline/data:/var/lib/outline/data
+    depends_on:
+      outline_postgres:
+        condition: service_healthy
+      outline_redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - all
+
+  outline_postgres:
+    image: postgres:17-alpine
+    container_name: outline_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: outline
+      POSTGRES_PASSWORD: ${OUTLINE_POSTGRES_PASSWORD?}
+      POSTGRES_DB: outline
+    volumes:
+      - ${DOCKER_DATA_DIR}/outline/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U outline -d outline"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - all
+
+  outline_redis:
+    image: redis:alpine
+    container_name: outline_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --save 60 1
+    volumes:
+      - ${DOCKER_DATA_DIR}/outline/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - all

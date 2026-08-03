@@ -1,0 +1,37 @@
+services:
+  aiostreams:
+    image: ghcr.io/viren070/aiostreams:${AIOSTREAMS_TAG:-latest}
+    container_name: aiostreams
+    restart: unless-stopped
+    dns: [1.1.1.1, 8.8.8.8]  # bypass local DNS so *.${DOMAIN} resolves to the public IP
+    expose:
+      - 3000
+    env_file:
+      - .env
+    environment:
+      - BASE_URL=https://${AIOSTREAMS_HOSTNAME?}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.aiostreams.rule=Host(`${AIOSTREAMS_HOSTNAME?}`)"
+      - "traefik.http.routers.aiostreams.entrypoints=websecure"
+      - "traefik.http.routers.aiostreams.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.aiostreams.middlewares=tinyauth@docker"
+    volumes:
+      - ${DOCKER_DATA_DIR}/aiostreams:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - aiostreams
+      - all

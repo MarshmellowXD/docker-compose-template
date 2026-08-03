@@ -1,0 +1,290 @@
+/* --- GLOBAL SCROLLBAR HIDING --- */
+::-webkit-scrollbar {
+    display: none;
+}
+ 
+body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* --- MASTER ROUNDED CORNERS --- */
+.service-card, 
+.bookmark-card,
+.group-header,
+div[id$="-card"],
+div[id$="-card"] > div,
+div[class*="rounded-lg"] {
+    border-radius: 25px !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+}
+
+/* --- CARD TINTING SETUP --- */
+#prowlarr-card, #nzbhydra-card, #nzbdav-card,
+#stremthru-card, #comet-card, #aiostreams-card,
+#aiomanager-card, #aiometadata-card, #arcane-card,
+#traefik-card, #tinyauth-card, #gluetun-card, #warp-card,
+#uptime-card, #dozzle-card,
+#ntfy-card, #flare-card, #watchtower-card, #ddns-card {
+    position: relative !important;
+    background-color: transparent !important;
+}
+
+#prowlarr-card::before, #nzbhydra-card::before, #nzbdav-card::before,
+#stremthru-card::before, #comet-card::before, #aiostreams-card::before,
+#aiomanager-card::before, #aiometadata-card::before, #arcane-card::before,
+#traefik-card::before, #tinyauth-card::before, #gluetun-card::before, #warp-card::before,
+#uptime-card::before, #dozzle-card::before,
+#ntfy-card::before, #flare-card::before, #watchtower-card::before, #ddns-card::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 6px; 
+    z-index: 0;
+    border-radius: 23px !important;
+    opacity: 0.35;
+}
+
+/* --- SERVICE COLOR ASSIGNMENTS --- */
+#prowlarr-card::before    { background-color: #ff3d00 !important; }
+#nzbhydra-card::before    { background-color: #4ade80 !important; }
+#nzbdav-card::before      { background-color: #22d3ee !important; }
+#stremthru-card::before   { background-color: #8B5CF6 !important; }
+#comet-card::before       { background-color: #6366f1 !important; }
+#aiostreams-card::before  { background-color: #a78bfa !important; }
+#aiomanager-card::before  { background-color: #7c3aed !important; }
+#aiometadata-card::before { background-color: #9333ea !important; }
+#arcane-card::before      { background-color: #c026d3 !important; }
+#traefik-card::before     { background-color: #24A1C1 !important; }
+#tinyauth-card::before    { background-color: #3b82f6 !important; }
+#gluetun-card::before     { background-color: #16a34a !important; }
+#warp-card::before        { background-color: #f97316 !important; }
+#uptime-card::before      { background-color: #61efad !important; }
+#dozzle-card::before      { background-color: #3eadff !important; }
+#ntfy-card::before        { background-color: #f59e0b !important; }
+#flare-card::before       { background-color: #ef4444 !important; }
+#watchtower-card::before  { background-color: #0ea5e9 !important; }
+#ddns-card::before        { background-color: #F38020 !important; }
+
+/* --- STATUS & PING BADGE POSITIONING --- */
+.service-card > div {
+    position: relative;
+    z-index: 1;
+}
+
+span[class*="status-"], 
+div[class*="status-"] {
+    position: absolute !important;
+    top: 10px !important;
+    right: 12px !important;
+    z-index: 10 !important;
+    border-radius: 8px !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    padding: 2px 6px !important;
+}
+
+.service-tags {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 4px !important;
+    top: 10px !important;
+    right: 12px !important;
+    position: absolute !important;
+    z-index: 20 !important;
+}
+
+.service-ping .ping-status {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    padding: 2px 6px !important;
+    height: auto !important;
+    width: auto !important;
+    background-image: none !important;
+}
+
+.service-ping .ping-status div {
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    opacity: 1 !important;
+    line-height: 1.2 !important;
+}
+
+.service-ping .ping-status div[class*="text-emerald"],
+.service-ping .ping-status div[class*="text-rose"],
+.service-ping .ping-status div[class*="text-red"] {
+    filter: brightness(1.4) !important; 
+}
+
+/* --- TAB NAVIGATION --- */
+#tabs ul {
+    width: fit-content !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: flex !important;            
+    flex-direction: row !important;      
+    flex-wrap: wrap !important;
+    justify-content: center !important;  
+    gap: 4px !important;
+    border-radius: 50px !important;
+    padding: 4px !important;
+    background-color: rgba(58, 58, 58, 0.2);
+}
+
+#tabs ul li {
+    width: auto !important;
+    flex: 0 0 auto !important;
+}
+
+#tabs ul li button {
+    width: auto !important;
+    border-radius: 50px !important;
+    padding: 6px 20px !important;
+    min-height: unset !important;
+    color: #ffffff83 !important; 
+    background-color: transparent !important;
+}
+
+#tabs ul li button[aria-selected="true"] {
+    color: #6aabbf !important;
+    background-color: rgba(78, 59, 122, 0.15) !important;
+    font-weight: bold !important;
+}
+
+@media (max-width: 768px) {
+    #tabs ul li button {
+        padding: 5px 10px !important; 
+        font-size: 13px !important;   
+    }
+    #tabs ul {
+        max-width: 100% !important;
+    }
+}
+
+/* --- BOOKMARK STYLING --- */
+li.bookmark a {
+    border-radius: 25px !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    margin-bottom: 8px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+li.bookmark .bookmark-icon {
+    border-radius: 0 !important;
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+li.bookmark .bookmark-text {
+    border-radius: 0 !important;
+}
+
+.bookmark-name {
+    color: #f5f5f583 !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+}
+
+.bookmark-description {
+    color: #94a3b8 !important;
+    font-size: 0.7rem !important;
+}
+
+li.bookmark a:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+li.bookmark a:hover .bookmark-name {
+    color: #555555 !important;
+}
+
+/* --- SYSTEM MONITOR --- */
+.information-widget-resource div[style*="width"] {
+    background: linear-gradient(90deg, #4ade80 0%, #2dd4bf 40%, #3b82f6 75%, #b80fde 100%) !important;
+    opacity: 0.40 !important;
+    border-radius: 10px !important;
+}
+
+.information-widget-resource:nth-of-type(1) svg { color: #4ade80 !important; } 
+.information-widget-resource:nth-of-type(2) svg { color: #22d3ee !important; }
+.information-widget-resource:nth-of-type(3) svg { color: #ef4444 !important; }
+.information-widget-resource:nth-of-type(4) svg { color: #3b82f6 !important; }
+
+/* --- GENERAL TYPOGRAPHY --- */
+.service-group-name, .bookmark-group-name {
+    color: #555555 !important;
+    font-weight: 700 !important;
+}
+
+.service-name, .service-description {
+    color: #f5f5f583 !important; 
+}
+
+
+/* Desktop and Tablet */
+@media (min-width: 768px) {
+    .widget-container,
+    .information-widget-logo,
+    [class*="information-widget-glances"] {
+        background-color: rgba(58, 58, 58, 0.2) !important;
+        border-radius: 50px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        height: 42px !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 16px !important;
+        margin-top: 10px !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .widget-container,
+    .information-widget-logo,
+    [class*="information-widget-glances"] {
+        background-color: rgba(58, 58, 58, 0.2) !important;
+        border-radius: 25px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        height: auto !important;
+        min-height: 40px !important;
+        padding: 8px 12px !important;
+        margin: 5px 0 !important;
+        width: 100% !important;
+    }
+
+    .information-widget-inner, 
+    [class*="information-widget-glances"] > div {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 8px !important;
+    }
+}
+
+/* Global Alignment for Widgets */
+.information-widget-logo img {
+    margin: 0 !important;
+    max-height: 24px !important;
+}
+
+.information-widget-resource,
+.widget-inner-text,
+.resource-icon {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+}
+
+.information-widget-resource {
+    margin-right: 12px !important;
+}

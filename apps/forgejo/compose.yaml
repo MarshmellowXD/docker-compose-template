@@ -1,0 +1,46 @@
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:15
+    container_name: forgejo
+    restart: unless-stopped
+    profiles: [all]
+    environment:
+      - USER_UID=${PUID}
+      - USER_GID=${PGID}
+      - TZ=${TZ}
+      - FORGEJO__server__DOMAIN=${FORGEJO_HOSTNAME?}
+      - FORGEJO__server__ROOT_URL=https://${FORGEJO_HOSTNAME?}/
+      - FORGEJO__server__SSH_DOMAIN=${FORGEJO_HOSTNAME?}
+      - FORGEJO__server__SSH_PORT=2222
+      - FORGEJO__server__SSH_LISTEN_PORT=22
+      - FORGEJO__service__DISABLE_REGISTRATION=true
+      - FORGEJO__service__REQUIRE_SIGNIN_VIEW=true
+    volumes:
+      - ${DOCKER_DATA_DIR}/forgejo:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "2222:22"
+    labels:
+      - traefik.enable=true
+
+      # Public router: git clone/push and API endpoints — no auth middleware
+      - traefik.http.routers.forgejo-public.rule=Host(`${FORGEJO_HOSTNAME?}`) && (PathPrefix(`/api/`) || PathRegexp(`^/[^/]+/[^/]+\.git($|/.*$)`))
+      - traefik.http.routers.forgejo-public.entrypoints=websecure
+      - traefik.http.routers.forgejo-public.tls.certresolver=letsencrypt
+      - traefik.http.routers.forgejo-public.priority=100
+      - traefik.http.routers.forgejo-public.service=forgejo
+      - traefik.http.services.forgejo.loadbalancer.server.port=3000
+
+      # Private router: web UI — protected by tinyauth
+      - traefik.http.routers.forgejo-private.rule=Host(`${FORGEJO_HOSTNAME?}`)
+      - traefik.http.routers.forgejo-private.entrypoints=websecure
+      - traefik.http.routers.forgejo-private.tls.certresolver=letsencrypt
+      - traefik.http.routers.forgejo-private.middlewares=tinyauth@docker
+      - traefik.http.routers.forgejo-private.service=forgejo
+
+      - homepage.group=Development
+      - homepage.name=Forgejo
+      - homepage.icon=forgejo.png
+      - homepage.href=https://${FORGEJO_HOSTNAME?}
+      - homepage.description=Self-hosted Git + CI

@@ -1,0 +1,30 @@
+services:
+  technitium:
+    image: technitium/dns-server:latest
+    container_name: technitium
+    restart: unless-stopped
+    ports:
+      - "${TECHNITIUM_BIND_IP:-0.0.0.0}:53:53/udp"
+      - "${TECHNITIUM_BIND_IP:-0.0.0.0}:53:53/tcp"
+      - "${TECHNITIUM_BIND_IP:-0.0.0.0}:5380:5380/tcp"
+    environment:
+      - TZ=${TZ:-Etc/UTC}
+    volumes:
+      - ${DOCKER_DATA_DIR}/technitium/config:/etc/dns
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.technitium.entrypoints=websecure"
+      - "traefik.http.routers.technitium.rule=Host(`${TECHNITIUM_HOSTNAME?}`)"
+      - "traefik.http.routers.technitium.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.technitium.middlewares=tinyauth@docker"
+      - "traefik.http.services.technitium.loadbalancer.server.port=5380"
+    profiles:
+      - all

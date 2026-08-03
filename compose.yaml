@@ -1,0 +1,46 @@
+# docker-compose-template
+# Docker Compose stack fronted by Traefik + Tinyauth + Pocket ID
+# Domain: ${DOMAIN}
+
+include:
+  # Core
+  - apps/traefik/compose.yaml
+  - apps/socket-proxy/compose.yaml
+  - apps/cloudflare-ddns/compose.yaml
+  - apps/watchtower/compose.yaml
+  - apps/gluetun/compose.yaml
+  - apps/warp/compose.yaml
+
+  # Media addons
+  - apps/aiostreams/compose.yaml
+  - apps/aiomanager/compose.yaml
+  - apps/aiometadata/compose.yaml
+  - apps/comet/compose.yaml
+  - apps/stremthru/compose.yaml
+  - apps/streamnzb/compose.yaml
+
+  # Monitoring
+  - apps/grafana/compose.yaml
+  - apps/prometheus/compose.yaml
+  - apps/alertmanager/compose.yaml
+  - apps/node-exporter/compose.yaml
+  - apps/uptime-kuma/compose.yaml
+  - apps/dozzle/compose.yaml
+  - apps/homepage/compose.yaml
+
+  # Productivity & docs
+  - apps/forgejo/compose.yaml
+  - apps/forgejo-runner/compose.yaml
+  - apps/outline/compose.yaml
+
+  # Auth
+  - apps/pocket-id/compose.yaml
+  - apps/tinyauth/compose.yaml
+
+  # Utilities
+  - apps/ntfy/compose.yaml
+
+networks:
+  default:
+    name: ${DOCKER_NETWORK:-aio_network}
+    external: ${DOCKER_NETWORK_EXTERNAL:-false}

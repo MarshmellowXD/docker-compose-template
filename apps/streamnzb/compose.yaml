@@ -1,0 +1,22 @@
+services:
+  streamnzb:
+    image: ghcr.io/gaisberg/streamnzb:main
+    container_name: streamnzb
+    restart: unless-stopped
+    network_mode: "container:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - ${DOCKER_DATA_DIR}/streamnzb:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f streamnzb || exit 1"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    profiles:
+      - aiostreams
+      - all

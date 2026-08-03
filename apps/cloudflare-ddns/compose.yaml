@@ -1,0 +1,36 @@
+services:
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:1
+    container_name: cloudflare-ddns
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+    network_mode: host
+    read_only: true
+    cap_drop: [all]
+    security_opt: [no-new-privileges:true]
+    environment:
+      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"
+      PROXIED: false
+      IP6_PROVIDER: none
+      DOMAINS: >
+        ${AIOMANAGER_HOSTNAME?},
+        ${AIOMETADATA_HOSTNAME?},
+        ${AIOSTREAMS_HOSTNAME?},
+        ${OUTLINE_HOSTNAME?},
+        ${COMET_HOSTNAME?},
+        ${DOZZLE_HOSTNAME?},
+        ${FORGEJO_HOSTNAME?},
+        ${GRAFANA_HOSTNAME?},
+        ${HOMEPAGE_HOSTNAME?},
+        ${POCKET_ID_HOSTNAME?},
+        ${TINYAUTH_HOSTNAME?},
+        ${NTFY_HOSTNAME?},
+        ${PROMETHEUS_HOSTNAME?},
+        ${UPTIME_KUMA_HOSTNAME?},
+        ${STREAMNZB_HOSTNAME?},
+        ${STREMTHRU_HOSTNAME?},
+        ${TECHNITIUM_HOSTNAME?},
+        ${TRAEFIK_HOSTNAME?}
+    profiles:
+      - required
+      - all

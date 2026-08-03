@@ -1,0 +1,32 @@
+providers:
+  openweathermap: api
+  weatherapi: api
+headerStyle: boxedWidgets
+title: My Homelab
+favicon: /images/fav.ico
+background:
+  image: /images/background.png
+  saturate: 100
+  brightness: 85
+  opacity: 40
+theme: dark
+color: slate
+blockHighlights:
+  levels:
+    good: "bg-emerald-500/40 text-emerald-950 dark:bg-emerald-900/60 dark:text-emerald-400"
+    warn: "bg-amber-300/30 text-amber-900 dark:bg-amber-900/30 dark:text-amber-200"
+    danger: "bg-rose-700/45 text-rose-200 dark:bg-rose-950/70 dark:text-rose-400"
+maxGroupColumns: 4
+disableCollapse: true
+iconStyle: theme
+layout:
+  Grand Line:
+    tab: "Grand Line"
+    icon: mdi-ship-wheel
+    style: row
+    columns: 4
+  Monitor:
+    tab: "Monitor"
+    icon: si-grafana-#F46800
+    style: row
+    columns: 2

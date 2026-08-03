@@ -1,0 +1,11 @@
+- resources:
+    cpu: true
+    memory: true
+    network: true
+    disk: /
+- datetime:
+    text_size: xl
+    format:
+      dateStyle: full
+      timeStyle: short
+      hour12: true

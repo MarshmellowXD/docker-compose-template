@@ -1,0 +1,45 @@
+services:
+  tinyauth:
+    image: ghcr.io/tinyauthapp/tinyauth:v5
+    container_name: tinyauth
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      TZ: ${TZ}
+      TINYAUTH_APPURL: https://${TINYAUTH_HOSTNAME?}
+      TINYAUTH_SECRET: ${TINYAUTH_SECRET?}
+      TINYAUTH_AUTH_USERS: ${TINYAUTH_AUTH_USERS?}
+      TINYAUTH_SERVER_PORT: 3000
+      TINYAUTH_SERVER_ADDRESS: 0.0.0.0
+      TINYAUTH_AUTH_SECURECOOKIE: true
+      TINYAUTH_AUTH_SESSIONEXPIRY: 604800
+      TINYAUTH_DATABASE_PATH: /data/tinyauth.db
+      TINYAUTH_OAUTH_PROVIDERS_POCKETID_CLIENTID: ${POCKET_ID_TINYAUTH_CLIENTID?}
+      TINYAUTH_OAUTH_PROVIDERS_POCKETID_CLIENTSECRET: ${POCKET_ID_TINYAUTH_CLIENTSECRET?}
+      TINYAUTH_OAUTH_PROVIDERS_POCKETID_AUTHURL: https://${POCKET_ID_HOSTNAME?}/authorize
+      TINYAUTH_OAUTH_PROVIDERS_POCKETID_TOKENURL: https://${POCKET_ID_HOSTNAME?}/api/oidc/token
+      TINYAUTH_OAUTH_PROVIDERS_POCKETID_USERINFOURL: https://${POCKET_ID_HOSTNAME?}/api/oidc/userinfo
+      TINYAUTH_OAUTH_PROVIDERS_POCKETID_REDIRECTURL: https://${TINYAUTH_HOSTNAME?}/api/oauth/callback/pocketid
+      TINYAUTH_OAUTH_PROVIDERS_POCKETID_SCOPES: openid email profile groups
+      TINYAUTH_OAUTH_AUTOREDIRECT: pocketid
+      TINYAUTH_AUTH_TRUSTEDPROXIES: 172.18.0.0/16
+    volumes:
+      - ${DOCKER_DATA_DIR}/tinyauth:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tinyauth.rule=Host(`${TINYAUTH_HOSTNAME?}`)"
+      - "traefik.http.routers.tinyauth.entrypoints=websecure"
+      - "traefik.http.routers.tinyauth.tls.certresolver=letsencrypt"
+      - "traefik.http.services.tinyauth.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.tinyauth.forwardauth.address=http://tinyauth:3000/api/auth/traefik"
+      - "traefik.http.middlewares.tinyauth.forwardauth.trustForwardHeader=true"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    profiles:
+      - required
+      - all

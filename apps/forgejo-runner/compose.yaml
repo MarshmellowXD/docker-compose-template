@@ -1,0 +1,20 @@
+services:
+  forgejo-runner:
+    image: code.forgejo.org/forgejo/runner:12
+    container_name: forgejo-runner
+    restart: unless-stopped
+    profiles: [all]
+    working_dir: /data
+    command: forgejo-runner daemon --config /data/config.yml
+    environment:
+      # Runner image does not ship tzdata, so point TZ at the host's localtime file.
+      - TZ=:/etc/localtime
+    group_add:
+      - ${DOCKER_GID}
+    volumes:
+      - ${DOCKER_DATA_DIR}/forgejo-runner:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - forgejo
