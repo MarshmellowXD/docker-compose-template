@@ -1,0 +1,17 @@
+name: Mirror to GitHub
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mirror:
+    runs-on: self-hosted
+    steps:
+      - name: Push main branch to GitHub
+        run: |
+          set -euo pipefail
+          git remote add github git@github.com:MarshmellowXD/docker-compose-template.git 2>/dev/null || true
+          git fetch github main 2>/dev/null || true
+          git push github main
