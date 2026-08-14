@@ -19,10 +19,9 @@ A Docker Compose stack for self-hosting **40+ services** behind **Traefik**, wit
 git clone https://github.com/MarshmellowXD/docker-compose-template.git /opt/docker
 cd /opt/docker
 
-# 2. Copy and fill in environment files
-cp .env.example .env
-for f in apps/*/.env.example; do cp "$f" "${f%.example}"; done
+# 2. Fill in the environment files
 nano .env
+nano apps/<service-you-want>/.env
 
 # 3. Deploy the core services first
 docker compose --profile required up -d
@@ -53,8 +52,8 @@ Set `COMPOSE_PROFILES` in `.env` or pass `--profile <name>` to `docker compose` 
 
 ## Security notes
 
-- `.env` files are gitignored. Never commit them.
-- Set strong passwords and API tokens before starting services.
+- Fill in real secrets in the `.env` files before starting services.
+- If you fork this repo, make sure you don't commit your real secrets.
 - Review `apps/technitium/compose.yaml` before exposing DNS ports.
 - The default network is a single flat `aio_network`. Segment further if your threat model requires it.
 
