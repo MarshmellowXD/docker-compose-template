@@ -9,9 +9,15 @@ jobs:
   mirror:
     runs-on: self-hosted
     steps:
+      - name: Clone template repo from Forgejo
+        run: |
+          set -euo pipefail
+          git clone "https://oauth2:${FORGEJO_TOKEN}@forgejo.theallblue.net/MarshmellowXD/docker-compose-template.git" repo
+          cd repo
+          git remote add github git@github.com:MarshmellowXD/docker-compose-template.git 2>/dev/null || true
       - name: Push main branch to GitHub
         run: |
           set -euo pipefail
-          git remote add github git@github.com:MarshmellowXD/docker-compose-template.git 2>/dev/null || true
+          cd repo
           git fetch github main 2>/dev/null || true
           git push github main
