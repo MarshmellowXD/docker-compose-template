@@ -1,8 +1,5 @@
-# Local environment files — never commit real secrets.
-# Copy .env.example → .env and fill in your own values.
-.env
+# If you edit .env files with real secrets, be careful not to commit them.
 .env.local
-**/.env
 
 # Runtime data
 data/

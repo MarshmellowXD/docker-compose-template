@@ -37,17 +37,9 @@ cd /opt/docker
 
 Each app lives in its own folder under `apps/<name>/` with its own `compose.yaml` and `.env`. The root `compose.yaml` just pulls them all in with includes. Services are gated by profiles — you pick which ones to run with `COMPOSE_PROFILES`.
 
-## Step 2: Copy and Configure Environment Files
+## Step 2: Configure Environment Files
 
-The repo ships `.env.example` files so real secrets are never committed. Copy them to `.env` and fill in your own values:
-
-```bash
-cd /opt/docker
-cp .env.example .env
-for f in apps/*/.env.example; do cp "$f" "${f%.example}"; done
-```
-
-Open the root `.env`:
+Open the root `.env` and fill in your own values:
 
 ```bash
 nano .env

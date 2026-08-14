@@ -2,8 +2,6 @@
 
 A Docker Compose stack for self-hosting **40+ services** behind **Traefik**, with single sign-on via **Tinyauth + Pocket ID**.
 
-> ⚠️ **Do not commit real secrets.** This repo ships `.env.example` files. Copy them to `.env` and fill in your own values before deploying.
-
 ## What you get
 
 - **Reverse proxy & SSL**: Traefik with automatic Let's Encrypt certificates
