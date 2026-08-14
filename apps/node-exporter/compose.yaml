@@ -13,7 +13,7 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--path.rootfs=/rootfs'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$/|/)'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     deploy:
       resources:
         limits:
@@ -25,5 +25,6 @@ services:
       timeout: 10s
       retries: 3
     profiles:
+      - node-exporter
       - monitoring
       - all

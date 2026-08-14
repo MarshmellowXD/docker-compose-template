@@ -1,0 +1,27 @@
+services:
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=${TZ}
+      - PUID=1001
+      - PGID=1001
+    volumes:
+      - ${DOCKER_DATA_DIR}/transmission:/config
+      - ${DOCKER_DATA_DIR}/media/downloads:/data/downloads
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - transmission
+      - arr
+      - all

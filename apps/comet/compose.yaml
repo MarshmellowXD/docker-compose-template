@@ -37,9 +37,9 @@ services:
           memory: 256M
           cpus: "0.25"
     profiles:
-      - aiostreams
+      - comet
+      - streaming
       - all
-
   comet_postgres:
     container_name: comet_postgres
     image: postgres:17-alpine
@@ -84,5 +84,6 @@ services:
           memory: 256M
           cpus: "0.25"
     profiles:
-      - aiostreams
+      - comet
+      - streaming
       - all

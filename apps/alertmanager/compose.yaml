@@ -20,5 +20,6 @@ services:
           memory: 256M
           cpus: '0.25'
     profiles:
+      - alertmanager
       - monitoring
       - all

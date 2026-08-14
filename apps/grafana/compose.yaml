@@ -36,5 +36,6 @@ services:
       timeout: 10s
       retries: 3
     profiles:
+      - grafana
       - monitoring
       - all

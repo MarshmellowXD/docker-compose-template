@@ -41,5 +41,6 @@ services:
       retries: 3
       start_period: 10s
     profiles:
+      - tinyauth
       - required
       - all

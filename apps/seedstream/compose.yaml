@@ -1,0 +1,44 @@
+services:
+  seedstream:
+    build:
+      # Adjust this to the path of your seedstream source checkout.
+      # For the public template you can also point this at a Git URL once the repo is published.
+      context: ${SEEDSTREAM_BUILD_CONTEXT:-/opt/docker/seedstream}
+      dockerfile: Dockerfile.source
+    image: seedstream:local
+    container_name: seedstream
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=${TZ}
+    expose:
+      - 7000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.seedstream.rule=Host(`${SEEDSTREAM_HOSTNAME?}`)"
+      - "traefik.http.routers.seedstream.entrypoints=websecure"
+      - "traefik.http.routers.seedstream.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.seedstream.middlewares=tinyauth@docker"
+      - "traefik.http.services.seedstream.loadbalancer.server.port=7000"
+    volumes:
+      - ${DOCKER_DATA_DIR}/seedstream:/app/data
+      - ${DOCKER_DATA_DIR}/media:/data:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:7000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - seedstream
+      - streaming
+      - all

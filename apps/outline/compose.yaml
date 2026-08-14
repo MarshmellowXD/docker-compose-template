@@ -52,8 +52,9 @@ services:
           memory: 256M
           cpus: "0.25"
     profiles:
+      - outline
+      - productivity
       - all
-
   outline_postgres:
     image: postgres:17-alpine
     container_name: outline_postgres
@@ -78,8 +79,9 @@ services:
           memory: 256M
           cpus: "0.25"
     profiles:
+      - outline
+      - productivity
       - all
-
   outline_redis:
     image: redis:alpine
     container_name: outline_redis
@@ -101,4 +103,6 @@ services:
           memory: 256M
           cpus: "0.25"
     profiles:
+      - outline
+      - productivity
       - all

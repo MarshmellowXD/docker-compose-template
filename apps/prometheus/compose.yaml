@@ -31,5 +31,6 @@ services:
       timeout: 10s
       retries: 3
     profiles:
+      - prometheus
       - monitoring
       - all

@@ -1,4 +1,4 @@
-# Replace example.com with your actual domain before deploying. Alertmanager does not expand env vars.
+# Replace CHANGEME.COM with your actual domain before deploying. Alertmanager does not expand env vars.
 global:
   resolve_timeout: 5m
 
@@ -22,13 +22,13 @@ route:
 receivers:
   - name: 'ntfy-critical'
     webhook_configs:
-      - url: 'https://ntfy.example.com/critical'
+      - url: 'https://ntfy.CHANGEME.COM/critical'
         send_resolved: true
   - name: 'ntfy-alerts'
     webhook_configs:
-      - url: 'https://ntfy.example.com/alerts'
+      - url: 'https://ntfy.CHANGEME.COM/alerts'
         send_resolved: true
   - name: 'ntfy-info'
     webhook_configs:
-      - url: 'https://ntfy.example.com/info'
+      - url: 'https://ntfy.CHANGEME.COM/info'
         send_resolved: true

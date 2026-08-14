@@ -12,12 +12,7 @@ services:
     volumes:
       - ${DOCKER_DATA_DIR}/gluetun:/gluetun
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.streamnzb.rule=Host(`${STREAMNZB_HOSTNAME?}`)"
-      - "traefik.http.routers.streamnzb.entrypoints=websecure"
-      - "traefik.http.routers.streamnzb.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.streamnzb.middlewares=tinyauth@docker"
-      - "traefik.http.services.streamnzb.loadbalancer.server.port=7000"
+      - "traefik.enable=false"
     healthcheck:
       test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
       interval: 60s
@@ -33,7 +28,6 @@ services:
           memory: 256M
           cpus: "0.25"
     profiles:
-      - aiostreams
+      - gluetun
+      - arr
       - all
-
-

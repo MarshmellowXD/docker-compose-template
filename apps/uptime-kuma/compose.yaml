@@ -29,5 +29,6 @@ services:
           memory: 256M
           cpus: "0.25"
     profiles:
+      - uptime-kuma
       - monitoring
       - all

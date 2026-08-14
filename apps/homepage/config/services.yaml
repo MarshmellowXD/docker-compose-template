@@ -1,49 +1,42 @@
-# Replace example.com with your actual domain before deploying. Homepage does not expand env vars.
+# Replace CHANGEME.COM with your actual domain before deploying. Homepage does not expand env vars.
 - Grand Line:
     - AIOStreams:
-        href: https://aiostreams.example.com/
+        href: https://aiostreams.CHANGEME.COM/
         icon: sh-aiostreams
         description: Stream Aggregator
         server: my-docker
         container: aiostreams
 
     - Comet:
-        href: https://comet.example.com/
+        href: https://comet.CHANGEME.COM/
         icon: mdi-orbit-#6366f1
         description: Debrid Search
         server: my-docker
         container: comet
 
     - AIOMetadata:
-        href: https://aiometadata.example.com/
+        href: https://aiometadata.CHANGEME.COM/
         icon: sh-aiostreams
         description: Metadata
         server: my-docker
         container: aiometadata
 
     - AIOManager:
-        href: https://aiomanager.example.com/
+        href: https://aiomanager.CHANGEME.COM/
         icon: sh-aiostreams
         description: Addon Manager
         server: my-docker
         container: aiomanager
 
     - StremThru:
-        href: https://stremthru.example.com/
+        href: https://stremthru.CHANGEME.COM/
         icon: mdi-transfer-right-#8B5CF6
         description: Stremio Proxy
         server: my-docker
         container: stremthru
 
-    - StreamNZB:
-        href: https://streamnzb.example.com/
-        icon: mdi-download-network-#F59E0B
-        description: NZB Streamer
-        server: my-docker
-        container: streamnzb
-
     - Traefik:
-        href: https://traefik.example.com/
+        href: https://traefik.CHANGEME.COM/
         icon: si-traefikproxy-#24A1C1
         description: Reverse Proxy
         server: my-docker
@@ -53,35 +46,35 @@
           url: http://traefik:8080
 
     - TinyAuth:
-        href: https://login.example.com/
+        href: https://login.CHANGEME.COM/
         icon: mdi-shield-key-#8B5CF6
         description: Auth (TinyAuth)
         server: my-docker
         container: tinyauth
 
     - Pocket ID:
-        href: https://id.example.com/
+        href: https://id.CHANGEME.COM/
         icon: mdi-account-key-#7C3AED
         description: Identity Provider
         server: my-docker
         container: pocket-id
 
     - Outline:
-        href: https://docs.example.com/
+        href: https://docs.CHANGEME.COM/
         icon: sh-outline
         description: Docs Wiki
         server: my-docker
         container: outline
 
     - ntfy:
-        href: https://ntfy.example.com/
+        href: https://ntfy.CHANGEME.COM/
         icon: si-ntfy-#FF6B6B
         description: Notifications
         server: my-docker
         container: ntfy
 
     - Backrest:
-        href: http://your-backrest-ip:9898
+        href: http://backrest.CHANGEME.COM:9898
         icon: mdi-backup-restore
         description: Backups
 
@@ -90,29 +83,29 @@
         widget:
           type: iframe
           options:
-            src: https://grafana.example.com/d/sunny-all?orgId=1&kiosk
+            src: https://grafana.CHANGEME.COM/d/sunny-all?orgId=1&kiosk
             height: 800
 
     - Uptime Kuma:
-        href: https://status.example.com/
+        href: https://status.CHANGEME.COM/
         icon: sh-uptime-kuma
         description: Service Status
         server: my-docker
         container: kuma
         widget:
           type: uptimekuma
-          url: https://status.example.com/
+          url: https://status.CHANGEME.COM/
           slug: home
 
     - Dozzle:
-        href: https://dozzle.example.com/
+        href: https://dozzle.CHANGEME.COM/
         icon: sh-dozzle
         description: Container Logs
         server: my-docker
         container: dozzle
 
     - Prometheus:
-        href: https://prometheus.example.com/
+        href: https://prometheus.CHANGEME.COM/
         icon: si-prometheus-#E6522C
         description: Metrics
         server: my-docker
@@ -121,5 +114,5 @@
 - Networking:
     - Technitium:
         icon: technitium
-        href: https://dns.example.com
+        href: https://dns.CHANGEME.COM
         description: Local DNS Server

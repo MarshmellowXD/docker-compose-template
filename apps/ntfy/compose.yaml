@@ -15,7 +15,7 @@ services:
       NTFY_BASE_URL: "https://${NTFY_HOSTNAME?}"
       NTFY_BEHIND_PROXY: "true"
       NTFY_ENABLE_LOGIN: "true"
-      NTFY_ENABLE_SIGNUP: "${ENABLE_SIGNUP:-true}"
+      NTFY_ENABLE_SIGNUP: "${ENABLE_SIGNUP:-false}"
       NTFY_AUTH_DEFAULT_ACCESS: "deny-all"
       NTFY_UPSTREAM_BASE_URL: https://ntfy.sh
       NTFY_WEB_PUSH_PUBLIC_KEY: "${WEB_PUSH_PUBLIC_KEY}"
@@ -49,4 +49,6 @@ services:
           memory: 256M
           cpus: "0.25"
     profiles:
+      - ntfy
+      - utils
       - all

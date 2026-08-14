@@ -3,7 +3,7 @@ services:
     image: codeberg.org/forgejo/forgejo:15
     container_name: forgejo
     restart: unless-stopped
-    profiles: [all]
+    profiles: [forgejo, productivity, all]
     environment:
       - USER_UID=${PUID}
       - USER_GID=${PGID}

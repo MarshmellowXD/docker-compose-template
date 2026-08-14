@@ -1,9 +1,20 @@
 # docker-compose-template
 # Docker Compose stack fronted by Traefik + Tinyauth + Pocket ID
 # Domain: ${DOMAIN}
+#
+# Services are gated by profiles. Use COMPOSE_PROFILES to pick what runs:
+#   required    - Core infrastructure (cannot be disabled)
+#   streaming   - AIOStreams, AIOMetadata, AIOManager, SeedStream, StremThru, Comet
+#   arr         - *arr stack + download clients + Jellyfin/Seerr
+#   security    - Vaultwarden
+#   photos      - Immich
+#   monitoring  - Grafana, Prometheus, Uptime Kuma, etc.
+#   productivity - Forgejo, Outline
+#   utils       - ntfy, Warp, Technitium
+#   all         - Everything
 
 include:
-  # Core
+  # Core infrastructure
   - apps/traefik/compose.yaml
   - apps/socket-proxy/compose.yaml
   - apps/cloudflare-ddns/compose.yaml
@@ -15,9 +26,29 @@ include:
   - apps/aiostreams/compose.yaml
   - apps/aiomanager/compose.yaml
   - apps/aiometadata/compose.yaml
-  - apps/comet/compose.yaml
+  # - apps/comet/compose.yaml        # Optional debrid search; enable with --profile comet or streaming
+  - apps/seedstream/compose.yaml
   - apps/stremthru/compose.yaml
-  - apps/streamnzb/compose.yaml
+
+  # Arr stack
+  - apps/qbittorrent/compose.yaml
+  - apps/transmission/compose.yaml
+  - apps/prowlarr/compose.yaml
+  - apps/radarr/compose.yaml
+  - apps/sonarr/compose.yaml
+  - apps/bazarr/compose.yaml
+  - apps/byparr/compose.yaml
+  - apps/sabnzbd/compose.yaml
+  - apps/jellyfin/compose.yaml
+  - apps/seerr/compose.yaml
+  - apps/prismarr/compose.yaml
+  - apps/qui/compose.yaml
+
+  # Security
+  - apps/vaultwarden/compose.yaml
+
+  # Media (photos)
+  - apps/immich/compose.yaml
 
   # Monitoring
   - apps/grafana/compose.yaml
@@ -27,6 +58,7 @@ include:
   - apps/uptime-kuma/compose.yaml
   - apps/dozzle/compose.yaml
   - apps/homepage/compose.yaml
+  - apps/beszel/compose.yaml
 
   # Productivity & docs
   - apps/forgejo/compose.yaml
@@ -37,8 +69,9 @@ include:
   - apps/pocket-id/compose.yaml
   - apps/tinyauth/compose.yaml
 
-  # Utilities
+  # Networking & utilities
   - apps/ntfy/compose.yaml
+  - apps/technitium/compose.yaml
 
 networks:
   default:

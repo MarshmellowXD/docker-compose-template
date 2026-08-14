@@ -1,5 +1,8 @@
-# Local environment overrides only — committed .env files contain placeholders
+# Local environment files — never commit real secrets.
+# Copy .env.example → .env and fill in your own values.
+.env
 .env.local
+**/.env
 
 # Runtime data
 data/

@@ -1,0 +1,39 @@
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    expose:
+      - 8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sabnzbd.rule=Host(`${SABNZBD_HOSTNAME?}`)"
+      - "traefik.http.routers.sabnzbd.entrypoints=websecure"
+      - "traefik.http.routers.sabnzbd.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.sabnzbd.middlewares=tinyauth@docker"
+      - "traefik.http.services.sabnzbd.loadbalancer.server.port=8080"
+    volumes:
+      - ${DOCKER_DATA_DIR}/sabnzbd:/config
+      - ${DOCKER_DATA_DIR}/media/downloads:/data/downloads
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --tries=1 --spider \"http://127.0.0.1:8080/api?mode=version\" || exit 1"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    profiles:
+      - sabnzbd
+      - arr
+      - all

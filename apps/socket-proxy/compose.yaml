@@ -25,5 +25,6 @@ services:
       timeout: 5s
       retries: 3
     profiles:
+      - socket-proxy
       - required
       - all
