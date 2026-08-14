@@ -27,7 +27,8 @@ SSH into your VPS and run:
 # Create the directory and clone
 sudo mkdir -p /opt
 cd /opt
-git clone https://github.com/MarshmellowXD/docker-compose-template.git docker
+# If you are using the public GitHub mirror, replace the URL below.
+git clone https://forgejo.theallblue.net/MarshmellowXD/docker-compose-template.git docker
 sudo chown -R $(id -u):$(id -g) /opt/docker
 cd /opt/docker
 ```
@@ -36,9 +37,17 @@ cd /opt/docker
 
 Each app lives in its own folder under `apps/<name>/` with its own `compose.yaml` and `.env`. The root `compose.yaml` just pulls them all in with includes. Services are gated by profiles — you pick which ones to run with `COMPOSE_PROFILES`.
 
-## Step 2: Configure the Root Environment File
+## Step 2: Copy and Configure Environment Files
 
-The root `.env` file is the main configuration for the entire stack. Open it with any text editor:
+The repo ships `.env.example` files so real secrets are never committed. Copy them to `.env` and fill in your own values:
+
+```bash
+cd /opt/docker
+cp .env.example .env
+for f in apps/*/.env.example; do cp "$f" "${f%.example}"; done
+```
+
+Open the root `.env`:
 
 ```bash
 nano .env
@@ -221,12 +230,12 @@ docker compose restart tinyauth
 
 ## Step 5: Add Services
 
-Now that auth is working, let's add the streaming services. Services are grouped into profiles — `required` for core, `aiostreams` for streaming, `monitoring` for dashboards, and `all` for everything.
+Now that auth is working, let's add the streaming services. Services are grouped into profiles — `required` for core, `streaming` for streaming media apps, `monitoring` for dashboards, and `all` for everything.
 
 Edit `.env` and change `COMPOSE_PROFILES` from `required` to whatever you want:
 
 ```env
-COMPOSE_PROFILES=required,aiostreams,monitoring
+COMPOSE_PROFILES=required,streaming,arr,monitoring
 ```
 
 Or just run everything:
@@ -238,7 +247,7 @@ COMPOSE_PROFILES=all
 You can also launch specific services on the fly without editing `.env`:
 
 ```bash
-docker compose --profile aiostreams --profile comet up -d
+docker compose --profile streaming --profile arr up -d
 ```
 
 ### Configure per-app secrets
@@ -361,7 +370,7 @@ Copy this — you'll paste it into Stremio.
 
 The monitoring stack (Grafana, Prometheus, Uptime Kuma, Homepage) requires minimal config:
 
-1. Enable `monitoring` in `COMPOSE_PROFILES` or set it to `all`
+1. Enable `monitoring` (and any other groups you want) in `COMPOSE_PROFILES` or set it to `all`
 2. Deploy: `docker compose up -d`
 3. Open `https://grafana.YOURDOMAIN` — default login is `admin` / `admin`
 4. Open `https://home.YOURDOMAIN` — your dashboard
