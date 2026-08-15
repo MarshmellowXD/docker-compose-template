@@ -27,7 +27,6 @@ services:
         ${IMMICH_HOSTNAME?},
         ${JELLYFIN_HOSTNAME?},
         ${NTFY_HOSTNAME?},
-        ${PUSH_HOSTNAME?},
         ${OUTLINE_HOSTNAME?},
         ${POCKET_ID_HOSTNAME?},
         ${PRISMARR_HOSTNAME?},
