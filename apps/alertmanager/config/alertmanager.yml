@@ -22,13 +22,13 @@ route:
 receivers:
   - name: 'ntfy-critical'
     webhook_configs:
-      - url: 'https://ntfy.CHANGEME.COM/critical'
+      - url: 'http://ntfy:80/critical'
         send_resolved: true
   - name: 'ntfy-alerts'
     webhook_configs:
-      - url: 'https://ntfy.CHANGEME.COM/alerts'
+      - url: 'http://ntfy:80/alerts'
         send_resolved: true
   - name: 'ntfy-info'
     webhook_configs:
-      - url: 'https://ntfy.CHANGEME.COM/info'
+      - url: 'http://ntfy:80/info'
         send_resolved: true

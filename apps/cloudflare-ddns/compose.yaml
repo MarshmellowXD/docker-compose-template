@@ -31,6 +31,7 @@ services:
         ${POCKET_ID_HOSTNAME?},
         ${PRISMARR_HOSTNAME?},
         ${PROMETHEUS_HOSTNAME?},
+        ${ALERTMANAGER_HOSTNAME?},
         ${PROWLARR_HOSTNAME?},
         ${QBIT_HOSTNAME?},
         ${QUI_HOSTNAME?},
