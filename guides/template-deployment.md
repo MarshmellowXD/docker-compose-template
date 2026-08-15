@@ -40,8 +40,6 @@ sudo chown -R $(id -u):$(id -g) /opt/docker
 cd /opt/docker
 ```
 
-> The GitHub repo is currently private. If you're using the Forgejo copy, use that URL instead.
-
 ---
 
 ## Step 3: Fill in `.env`
