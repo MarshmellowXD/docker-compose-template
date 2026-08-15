@@ -78,7 +78,36 @@
         icon: mdi-backup-restore
         description: Backups
 
+- Downloads:
+    - qBittorrent:
+        href: https://qbit.CHANGEME.COM/
+        icon: sh-qbittorrent
+        description: Torrent Downloader
+        server: my-docker
+        container: qbittorrent
+
+    - Transmission:
+        href: https://transmission.CHANGEME.COM/
+        icon: sh-transmission
+        description: Torrent Downloader
+        server: my-docker
+        container: transmission
+
+    - SABnzbd:
+        href: https://sabnzbd.CHANGEME.COM/
+        icon: sh-sabnzbd
+        description: Usenet Downloader
+        server: my-docker
+        container: sabnzbd
+
 - Monitor:
+    - Alertmanager:
+        href: https://alertmanager.CHANGEME.COM/
+        icon: sh-alertmanager
+        description: Alerts
+        server: my-docker
+        container: alertmanager
+
     - Grafana Dashboard:
         widget:
           type: iframe
