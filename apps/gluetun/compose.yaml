@@ -12,7 +12,19 @@ services:
     volumes:
       - ${DOCKER_DATA_DIR}/gluetun:/gluetun
     labels:
-      - "traefik.enable=false"
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`${QBIT_HOSTNAME?}`)"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.qbittorrent.middlewares=tinyauth@docker"
+      - "traefik.http.routers.qbittorrent.service=qbittorrent"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_HOSTNAME?}`)"
+      - "traefik.http.routers.transmission.entrypoints=websecure"
+      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.transmission.middlewares=tinyauth@docker"
+      - "traefik.http.routers.transmission.service=transmission"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
     healthcheck:
       test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
       interval: 60s
