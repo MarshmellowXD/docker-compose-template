@@ -4,9 +4,9 @@ A Docker Compose stack for self-hosting various applications on a VPS, using Tra
 
 This is a template, so feel free to edit it by removing or adding services as you see fit.
 
-A full start-to-finish guide, which assumes you start from scratch, can be found on my site [here](https://guides.viren070.me/selfhosting). It will go through setting up an Oracle VPS, installing Docker, and then using this compose stack.
+For setting up the VPS itself, see the [VPS Setup Guide](guides/vps-setup.md).
 
-This is the general guide:
+This is the general deployment guide:
 
 ## Prerequisites
 
