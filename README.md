@@ -1,61 +1,61 @@
 # Docker Compose Template
 
-A Docker Compose stack for self-hosting **40+ services** behind **Traefik**, with single sign-on via **Tinyauth + Pocket ID**.
+A Docker Compose stack for self-hosting various applications on a VPS, using Traefik as a reverse proxy and Tinyauth + Pocket ID for authentication.
 
-## What you get
+This is a template, so feel free to edit it by removing or adding services as you see fit.
 
-- **Reverse proxy & SSL**: Traefik with automatic Let's Encrypt certificates
-- **Authentication**: Tinyauth (forward-auth) + Pocket ID (OIDC provider)
-- **Streaming**: AIOStreams, AIOMetadata, AIOManager, SeedStream, StremThru, Comet
-- **Media backend**: qBittorrent, Transmission, Prowlarr, Radarr, Sonarr, Bazarr, Jellyfin, Overseerr, and more
-- **Monitoring**: Grafana, Prometheus, Alertmanager, Uptime Kuma, Dozzle, Homepage, Beszel
-- **Productivity**: Forgejo, Outline
-- **Utilities**: ntfy, Warp, Technitium DNS
+A full start-to-finish guide, which assumes you start from scratch, can be found on my site [here](https://guides.viren070.me/selfhosting). It will go through setting up an Oracle VPS, installing Docker, and then using this compose stack.
+
+This is the general guide:
+
+## Prerequisites
+
+- A VPS with Docker installed.
+- Port 80 and 443 open.
+- A domain with DNS records pointing to the VPS IP for each subdomain you want to use.
+- Moving your nameservers to Cloudflare is preferred as it enables Cloudflare DDNS, included in this template, to automatically create and maintain your DNS records.
 
 ## Quick start
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/MarshmellowXD/docker-compose-template.git /opt/docker
-cd /opt/docker
+1. Ensure Docker is installed per [https://get.docker.com](https://get.docker.com).
+2. Clone this repository and cd into it:
 
-# 2. Fill in the environment files
-nano .env
-nano apps/<service-you-want>/.env
+   ```bash
+   cd /opt
+   git clone https://github.com/MarshmellowXD/docker-compose-template.git docker
+   cd docker
+   ```
 
-# 3. Deploy the core services first
-docker compose --profile required up -d
+3. Use a text editor to open the `.env` file. If you are using nano, run this command:
 
-# 4. Add more services as needed, e.g.
-docker compose --profile streaming --profile arr up -d
-```
+   ```bash
+   nano .env
+   ```
+
+4. After you fill in the initial values in the root `.env`, it is recommended to use the `required` profile only and run the following command to start Traefik, Tinyauth, and Pocket ID:
+
+   ```bash
+   docker compose --profile required up -d
+   ```
+
+5. Now you can either start adding other profiles to the `COMPOSE_PROFILES` environment variable or use the `all` profile and fill in any other `.env` files for the services you want to use.
+
+6. Finally, run this command to start all the services according to your profiles in `.env`:
+
+   ```bash
+   docker compose up -d
+   ```
+
+   - Ensure you defined the `COMPOSE_PROFILES` environment variable in the `.env` file, otherwise none of the services will start.
+   - You can also use the `--profile` flag, e.g. `docker compose --profile streaming --profile arr up -d`.
+   - Ensure port 443 and port 80 are open.
+   - If you have not set up Cloudflare DDNS in the `.env` by providing your token and using the `cloudflare-ddns` profile, you will need to manually create A records for each service you want to use using the subdomain in the `.env` file.
 
 See the [Template Deployment Guide](guides/template-deployment.md) for the full walkthrough.
 
-## Profiles
+## About
 
-Services are grouped by profiles so you can enable only what you need:
-
-| Profile | Services |
-|---------|----------|
-| `required` | Traefik, Tinyauth, Pocket ID, Cloudflare DDNS, Watchtower, Socket Proxy |
-| `streaming` | AIOStreams, AIOMetadata, AIOManager, SeedStream, StremThru, Comet |
-| `arr` | *arr stack, download clients, Jellyfin, Overseerr |
-| `media` | Immich |
-| `security` | Vaultwarden |
-| `monitoring` | Grafana, Prometheus, Alertmanager, Uptime Kuma, Dozzle, Homepage, Beszel |
-| `productivity` | Forgejo, Forgejo Runner, Outline |
-| `utils` | ntfy, Warp, Technitium |
-| `all` | Everything |
-
-Set `COMPOSE_PROFILES` in `.env` or pass `--profile <name>` to `docker compose` commands.
-
-## Security notes
-
-- Fill in real secrets in the `.env` files before starting services.
-- If you fork this repo, make sure you don't commit your real secrets.
-- Review `apps/technitium/compose.yaml` before exposing DNS ports.
-- The default network is a single flat `aio_network`. Segment further if your threat model requires it.
+A flexible Docker Compose template to host various apps using Traefik and Tinyauth + Pocket ID, focusing on media streaming.
 
 ## Credits
 
