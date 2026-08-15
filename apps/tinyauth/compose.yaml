@@ -24,6 +24,8 @@ services:
       TINYAUTH_OAUTH_PROVIDERS_POCKETID_SCOPES: openid email profile groups
       TINYAUTH_OAUTH_AUTOREDIRECT: pocketid
       TINYAUTH_AUTH_TRUSTEDPROXIES: 172.18.0.0/16
+      TINYAUTH_APPS_ntfy_CONFIG_DOMAIN: ntfy.${DOMAIN?}
+      TINYAUTH_APPS_ntfy_PATH_ALLOW: ^/v1/|^/critical|^/alerts|^/info|^/watchtower
     volumes:
       - ${DOCKER_DATA_DIR}/tinyauth:/data
     labels:

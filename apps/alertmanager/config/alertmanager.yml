@@ -24,11 +24,17 @@ receivers:
     webhook_configs:
       - url: 'http://ntfy:80/critical'
         send_resolved: true
+        http_config:
+          bearer_token: CHANGEME_NTFY_TOKEN
   - name: 'ntfy-alerts'
     webhook_configs:
       - url: 'http://ntfy:80/alerts'
         send_resolved: true
+        http_config:
+          bearer_token: CHANGEME_NTFY_TOKEN
   - name: 'ntfy-info'
     webhook_configs:
       - url: 'http://ntfy:80/info'
         send_resolved: true
+        http_config:
+          bearer_token: CHANGEME_NTFY_TOKEN
