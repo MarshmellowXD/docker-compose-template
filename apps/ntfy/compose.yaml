@@ -3,7 +3,7 @@ services:
     image: binwiederhier/ntfy
     container_name: ntfy
     restart: unless-stopped
-    user: "0:0"
+    user: ${PUID}:${PGID}
     command:
       - serve
     expose:
@@ -15,7 +15,7 @@ services:
       NTFY_BASE_URL: "https://${NTFY_HOSTNAME?}"
       NTFY_BEHIND_PROXY: "true"
       NTFY_ENABLE_LOGIN: "true"
-      NTFY_ENABLE_SIGNUP: "${ENABLE_SIGNUP:-false}"
+      NTFY_ENABLE_SIGNUP: "${ENABLE_SIGNUP:-true}"
       NTFY_AUTH_DEFAULT_ACCESS: "deny-all"
       NTFY_UPSTREAM_BASE_URL: https://ntfy.sh
       NTFY_WEB_PUSH_PUBLIC_KEY: "${WEB_PUSH_PUBLIC_KEY}"
@@ -30,7 +30,6 @@ services:
       - "traefik.http.routers.ntfy.rule=Host(`${NTFY_HOSTNAME?}`)"
       - "traefik.http.routers.ntfy.entrypoints=websecure"
       - "traefik.http.routers.ntfy.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.ntfy.middlewares=tinyauth@docker"
       - "traefik.http.services.ntfy.loadbalancer.server.port=80"
     volumes:
       - ${DOCKER_DATA_DIR}/ntfy:/var/lib/ntfy
