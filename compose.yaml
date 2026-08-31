@@ -4,7 +4,7 @@
 #
 # Services are gated by profiles. Use COMPOSE_PROFILES to pick what runs:
 #   required    - Core infrastructure (cannot be disabled)
-#   streaming   - AIOStreams, AIOMetadata, AIOManager, SeedStream, StremThru, Comet
+#   streaming   - AIOStreams, AIOMetadata, AIOManager, StremThru, Comet
 #   arr         - *arr stack + download clients + Jellyfin/Seerr
 #   security    - Vaultwarden
 #   photos      - Immich
@@ -27,7 +27,6 @@ include:
   - apps/aiomanager/compose.yaml
   - apps/aiometadata/compose.yaml
   # - apps/comet/compose.yaml        # Optional debrid search; enable with --profile comet or streaming
-  - apps/seedstream/compose.yaml
   - apps/stremthru/compose.yaml
 
   # Arr stack
