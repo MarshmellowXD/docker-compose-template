@@ -4,6 +4,9 @@ services:
     container_name: seerr
     restart: unless-stopped
     init: true
+    # The image runs as the node user (uid 1000). On a fresh bind mount the
+    # config directory is owned by root, so the app cannot create /app/config/logs.
+    # Start as root, fix ownership, then drop back to node before launching.
     user: "0:0"
     environment:
       TZ: ${TZ}
