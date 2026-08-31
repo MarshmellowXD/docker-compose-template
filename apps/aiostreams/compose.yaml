@@ -3,7 +3,6 @@ services:
     image: ghcr.io/viren070/aiostreams:${AIOSTREAMS_TAG:-latest}
     container_name: aiostreams
     restart: unless-stopped
-    dns: [1.1.1.1, 8.8.8.8]  # bypass local DNS so *.${DOMAIN} resolves to the public IP
     expose:
       - 3000
     env_file:

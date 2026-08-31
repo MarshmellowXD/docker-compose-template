@@ -3,6 +3,7 @@ services:
     image: muniftanjim/stremthru:latest
     container_name: stremthru
     restart: unless-stopped
+    entrypoint: ["sh", "-c", "git config --global --add safe.directory /app/data/hashlists && exec ./stremthru"]
     dns: [1.1.1.1, 8.8.8.8]  # bypass local DNS so *.${DOMAIN} resolves to the public IP
     expose:
       - 8080

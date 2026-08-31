@@ -1,6 +1,6 @@
 services:
   aiomanager:
-    image: ghcr.io/sonicx161/aiomanager:latest
+    image: ghcr.io/sonicx161/aiomanager:beta
     container_name: aiomanager
     restart: unless-stopped
     dns: [1.1.1.1, 8.8.8.8]  # bypass local DNS so *.${DOMAIN} resolves to the public IP
@@ -44,7 +44,7 @@ services:
       - streaming
       - all
   #aiomanager_postgres: # un-comment if using postgres
-  #  image: postgres:18-alpine
+  #  image: postgres:17-alpine
   #  container_name: aiomanager_postgres
   #  restart: unless-stopped
   #  environment:
@@ -60,5 +60,5 @@ services:
   #    timeout: 5s
   #    retries: 5
   #  profiles:
-  #    - aiostreams
+  #    - aiomanager
   #    - all

@@ -113,7 +113,7 @@ COMPOSE_PROFILES=required
 ```
 
 Options:
-- `required` — only Traefik, Tinyauth, Pocket ID, DDNS
+- `required` — only Traefik, Tinyauth, Pocket ID, Cloudflare DDNS, socket-proxy, and WARP
 - `required,streaming` — adds streaming apps
 - `required,streaming,arr` — adds *arr stack and Jellyfin
 - `all` — everything
@@ -270,6 +270,8 @@ docker compose up -d
 ---
 
 ## Step 8: Set up streaming
+
+Stremio addons expose public `manifest.json` and `/stream/` endpoints so the Stremio client can talk to them. Tinyauth is configured to allow these paths automatically, so you don't need to disable auth for your addons.
 
 ### Configure AIOStreams
 

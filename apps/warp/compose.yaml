@@ -31,6 +31,5 @@ services:
           memory: 128M
           cpus: "0.1"
     profiles:
-      - warp
-      - utils
+      - required
       - all
