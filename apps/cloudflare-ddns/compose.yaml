@@ -37,7 +37,6 @@ services:
         ${QUI_HOSTNAME?},
         ${RADARR_HOSTNAME?},
         ${SABNZBD_HOSTNAME?},
-        ${SEEDSTREAM_HOSTNAME?},
         ${SEERR_HOSTNAME?},
         ${SONARR_HOSTNAME?},
         ${STREMTHRU_HOSTNAME?},
