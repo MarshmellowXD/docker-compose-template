@@ -2,33 +2,24 @@
 
 This guide walks you through deploying the stack on your VPS.
 
-By the end you'll have:
-
-- Traefik reverse proxy with automatic SSL
-- Tinyauth + Pocket ID login for your apps
-- Streaming, media, monitoring, and productivity apps running
+By the end you'll have Traefik reverse proxy with automatic SSL, Tinyauth + Pocket ID login, and your chosen apps running.
 
 If you haven't set up your VPS yet, follow the [VPS Setup Guide](./vps-setup.md) first.
 
 ---
 
-## Before you start
+## Requirements
 
-Make sure you have:
-
-- A VPS with Ubuntu 24.04 and Docker installed
-- A domain name you own
-- DNS records pointing to your VPS IP
-- Ports 80 and 443 open on your VPS firewall
+- VPS with Ubuntu 24.04 and Docker installed
+- Domain name pointing to your VPS IP
+- Ports 80 and 443 open
 - About 20-30 minutes
 
-> **Warning:** This stack binds ports 80 and 443. Don't run it on a server that already uses those ports for another reverse proxy.
+> This stack binds ports 80 and 443. Don't run it on a server that already uses those ports.
 
 ---
 
 ## Step 1: Connect to your VPS
-
-Run this on your local computer:
 
 ```bash
 ssh -i /path/to/your-key ubuntu@YOUR_SERVER_IP
@@ -38,35 +29,13 @@ All remaining commands run on the VPS.
 
 ---
 
-## Step 2: Create the folder and clone the template
-
-Create `/opt/docker`:
+## Step 2: Clone the template
 
 ```bash
 sudo mkdir -p /opt
-```
-
-Move into `/opt`:
-
-```bash
 cd /opt
-```
-
-Clone the template:
-
-```bash
 sudo git clone https://github.com/MarshmellowXD/docker-compose-template.git docker
-```
-
-Make yourself the owner:
-
-```bash
 sudo chown -R $(id -u):$(id -g) /opt/docker
-```
-
-Move into the project folder:
-
-```bash
 cd /opt/docker
 ```
 
@@ -74,15 +43,11 @@ cd /opt/docker
 
 ## Step 3: Fill in `.env`
 
-Open the main config file:
-
 ```bash
 nano .env
 ```
 
-### Basic settings
-
-Set these near the top:
+Set the basics:
 
 ```env
 TZ=America/New_York
@@ -100,19 +65,21 @@ LETSENCRYPT_EMAIL=you@yourdomain.com
 CLOUDFLARE_API_TOKEN=your_cloudflare_token
 ```
 
-> **Cloudflare token:** Log into Cloudflare, go to **My Profile → API Tokens → Create Token**, and use the **Edit zone DNS** template.
->
-> Not using Cloudflare? Leave the token blank and create DNS A records manually.
+Get a Cloudflare token at **My Profile → API Tokens → Create Token** using the **Edit zone DNS** template. Not using Cloudflare? Leave the token blank and create DNS A records manually.
 
-### Generate secrets
+### Secrets
 
-Run this twice:
+Generate two secrets:
 
 ```bash
 openssl rand -base64 32
 ```
 
-Copy each output into `.env`:
+```bash
+openssl rand -base64 32
+```
+
+Paste them into `.env`:
 
 ```env
 POCKET_ID_ENCRYPTION_KEY=<first output>
@@ -122,7 +89,7 @@ POCKET_ID_ENCRYPTION_KEY=<first output>
 TINYAUTH_SECRET=<second output>
 ```
 
-### Create your first user
+### First user
 
 Generate a password hash:
 
@@ -136,23 +103,15 @@ Output looks like:
 yourusername:$2y$05$abcdefghijklmnopqrstuvwxyz123456789
 ```
 
-Paste only the part after the colon, with `$$` instead of `$`:
+Paste only the part after the colon, doubling `$` to `$$`:
 
 ```env
 TINYAUTH_AUTH_USERS=yourusername:$$2y$$05$$abcdefghijklmnopqrstuvwxyz123456789
 ```
 
-> **Why `$$`?** Docker Compose treats `$` specially, so you must double it.
+### Choose services
 
-### Choose which apps to run
-
-Find this line:
-
-```env
-COMPOSE_PROFILES="required"
-```
-
-Pick one:
+Set one of these in `.env`:
 
 ```env
 COMPOSE_PROFILES="required"
@@ -175,65 +134,48 @@ COMPOSE_PROFILES="all"
 - `arr` — *arr stack, Jellyfin, download clients
 - `all` — everything
 
-For your first deploy, use `required` only.
+For your first deploy, use `required`.
 
-Save and exit nano:
-
-```text
-Ctrl+X, Y, Enter
-```
+Save and exit nano with `Ctrl+X`, `Y`, `Enter`.
 
 ---
 
 ## Step 4: Configure Traefik
 
-Open Traefik's environment file:
-
 ```bash
 nano apps/traefik/.env
 ```
 
-For testing, use Let's Encrypt staging to avoid rate limits:
+For testing, use staging to avoid Let's Encrypt rate limits:
 
 ```env
 LE_CA_SERVER=https://acme-staging-v02.api.letsencrypt.org/directory
 ```
 
-For production, use the real server:
+For production:
 
 ```env
 LE_CA_SERVER=https://acme-v02.api.letsencrypt.org/directory
 ```
 
-Save and exit:
-
-```text
-Ctrl+X, Y, Enter
-```
+Save and exit.
 
 ---
 
-## Step 5: Start the core services
-
-Pull and start the required services:
+## Step 5: Start core services
 
 ```bash
 docker compose --profile required up -d
 ```
 
-Wait 30 seconds:
+Wait 30 seconds, then check status:
 
 ```bash
 sleep 30
-```
-
-Check that everything is up:
-
-```bash
 docker compose ps
 ```
 
-You should see these services as `Up` or `Up (healthy)`:
+Core services should show `Up` or `Up (healthy)`:
 
 - `traefik`
 - `tinyauth`
@@ -242,26 +184,17 @@ You should see these services as `Up` or `Up (healthy)`:
 - `cloudflare-ddns`
 - `warp`
 
-> **Docker Hub rate limits:** If pulls fail with `toomanyrequests`, wait 1-2 minutes and run the `up -d` command again.
+If pulls fail with `toomanyrequests`, wait 1-2 minutes and run `docker compose --profile required up -d` again.
 
 ---
 
 ## Step 6: Check SSL
 
-Open this in your browser:
+Open `https://traefik.YOURDOMAIN.com` in your browser. You should see a Tinyauth login page.
 
-```text
-https://traefik.YOURDOMAIN.com
-```
+Staging certificates will show a browser warning. That's expected. Switch to production `LE_CA_SERVER` once everything works.
 
-You should see a Tinyauth login page.
-
-> **Staging certificates show a browser warning.** That's expected. Click past it or switch to production LE_CA_SERVER once everything works.
-
-If you get a connection error:
-
-1. Make sure DNS points to your VPS IP.
-2. Check Traefik logs:
+If you get a connection error, check DNS and Traefik logs:
 
 ```bash
 docker compose logs traefik | grep -i "error\|cert"
@@ -271,34 +204,20 @@ docker compose logs traefik | grep -i "error\|cert"
 
 ## Step 7: Set up Pocket ID
 
-### Create a Pocket ID admin
+Open `https://id.YOURDOMAIN.com`:
 
-Open:
+1. Click **Create Account**
+2. Pick a username and email
+3. Set up a passkey
 
-```text
-https://id.YOURDOMAIN.com
-```
+Then connect Tinyauth:
 
-Click **Create Account**.
+1. In Pocket ID, go to **Authorized clients → Create authorized client**
+2. Set **Name** to `Tinyauth`
+3. Set **Callback URLs** to `https://login.YOURDOMAIN.com/api/oauth/callback/pocketid`
+4. Save and copy the **Client ID** and **Client Secret**
 
-Pick a username and email.
-
-Set up a passkey (Face ID, Windows Hello, or security key).
-
-### Connect Tinyauth to Pocket ID
-
-In Pocket ID, go to **Authorized clients → Create authorized client**.
-
-Fill in:
-
-- **Name:** `Tinyauth`
-- **Callback URLs:** `https://login.YOURDOMAIN.com/api/oauth/callback/pocketid`
-
-Click **Save**.
-
-Copy the **Client ID** and **Client Secret**.
-
-Open `.env` again:
+Open `.env`:
 
 ```bash
 nano .env
@@ -314,39 +233,19 @@ POCKET_ID_TINYAUTH_CLIENTID=<client id>
 POCKET_ID_TINYAUTH_CLIENTSECRET=<client secret>
 ```
 
-Save and exit:
-
-```text
-Ctrl+X, Y, Enter
-```
-
-Restart Tinyauth:
+Save and exit, then restart Tinyauth:
 
 ```bash
 docker compose restart tinyauth
 ```
 
-Wait 10 seconds:
-
-```bash
-sleep 10
-```
-
-### Test login
-
-Open:
-
-```text
-https://login.YOURDOMAIN.com
-```
-
-Click **Log in with Pocket ID** and verify it works.
+Test by opening `https://login.YOURDOMAIN.com` and clicking **Log in with Pocket ID**.
 
 ---
 
-## Step 8: Start the rest of your apps
+## Step 8: Start the rest
 
-If you picked `required,streaming`, `required,arr`, or `all`, start them now:
+If you picked `required,streaming`, `required,arr`, or `all`:
 
 ```bash
 docker compose up -d
@@ -358,35 +257,23 @@ Check status:
 docker compose ps
 ```
 
-Everything should be `Up` or `Up (healthy)`.
-
 If something is restarting, check its logs:
 
 ```bash
 docker compose logs <service-name>
 ```
 
-Example:
-
-```bash
-docker compose logs aiostreams
-```
-
 ---
 
 ## Step 9: Fill in app secrets
 
-Only edit the `.env` files for apps you actually use.
+Only edit the `.env` files for apps you use.
 
-### Gluetun (VPN)
-
-Open:
+### Gluetun
 
 ```bash
 nano apps/gluetun/.env
 ```
-
-Set your WireGuard private key:
 
 ```env
 WIREGUARD_PRIVATE_KEY=<your wireguard key>
@@ -394,33 +281,23 @@ WIREGUARD_PRIVATE_KEY=<your wireguard key>
 
 Get your key from [ProtonVPN](https://account.proton.me/u/0/vpn/WireGuard).
 
-Restart Gluetun:
-
 ```bash
 docker compose restart gluetun
 ```
 
 ### StremThru
 
-Open:
-
 ```bash
 nano apps/stremthru/.env
 ```
-
-Generate a secret:
 
 ```bash
 openssl rand -hex 32
 ```
 
-Paste:
-
 ```env
 STREMTHRU_VAULT_SECRET=<output>
 ```
-
-Restart StremThru:
 
 ```bash
 docker compose restart stremthru
@@ -428,25 +305,17 @@ docker compose restart stremthru
 
 ### AIOStreams
 
-Open:
-
 ```bash
 nano apps/aiostreams/.env
 ```
-
-Generate a secret:
 
 ```bash
 openssl rand -hex 32
 ```
 
-Paste:
-
 ```env
 SECRET_KEY=<output>
 ```
-
-Restart AIOStreams:
 
 ```bash
 docker compose restart aiostreams
@@ -456,39 +325,15 @@ docker compose restart aiostreams
 
 ## Step 10: Set up streaming
 
-Stremio addons expose public `manifest.json` and `/stream/` endpoints so the Stremio client can talk to them. Tinyauth is configured to allow these paths automatically, so you don't need to disable auth for your addons.
+Open `https://aiostreams.YOURDOMAIN.com`, log in with Pocket ID, add your debrid API key, and add a TMDB API key from [themoviedb.org/settings/api](https://www.themoviedb.org/settings/api). Save and copy the manifest URL.
 
-### Configure AIOStreams
-
-Open:
-
-```text
-https://aiostreams.YOURDOMAIN.com
-```
-
-Log in with Pocket ID.
-
-Add your debrid API key.
-
-Add a TMDB API key from [themoviedb.org/settings/api](https://www.themoviedb.org/settings/api).
-
-Save and copy the manifest URL.
-
-### Add to Stremio
-
-Open Stremio.
-
-Go to **Addons → Install from URL**.
-
-Paste the AIOStreams manifest URL.
-
-Click **Install**.
+In Stremio, go to **Addons → Install from URL**, paste the manifest URL, and click **Install**.
 
 ---
 
 ## Step 11: Monitoring (optional)
 
-If you enabled the `monitoring` profile:
+If you enabled `monitoring`:
 
 - Grafana: `https://grafana.YOURDOMAIN.com` (default `admin` / `admin`)
 - Homepage: `https://home.YOURDOMAIN.com`
@@ -500,9 +345,7 @@ If you enabled the `monitoring` profile:
 
 ### Certificate error
 
-Wait 2-3 minutes.
-
-Check Traefik logs:
+Wait 2-3 minutes, then check Traefik logs:
 
 ```bash
 docker compose logs traefik | grep -i "error\|cert"
@@ -512,24 +355,16 @@ Make sure DNS points to your VPS.
 
 ### Container keeps restarting
 
-Check logs:
-
 ```bash
 docker compose logs <service-name>
 ```
 
-Example:
-
-```bash
-docker compose logs tinyauth
-```
-
 ### Can't log in
 
-Check in `.env`:
+Check `.env`:
 
 - `TINYAUTH_SECRET` is set
-- `TINYAUTH_AUTH_USERS` uses `$$
+- `TINYAUTH_AUTH_USERS` uses `$$`
 - Pocket ID client ID and secret are correct
 
 Then restart Tinyauth:
@@ -538,24 +373,10 @@ Then restart Tinyauth:
 docker compose restart tinyauth
 ```
 
-### Need to browse logs
+### Browse logs
 
-Open Dozzle:
-
-```text
-https://dozzle.YOURDOMAIN.com
-```
-
-Or follow logs in the terminal:
+Open `https://dozzle.YOURDOMAIN.com` or run:
 
 ```bash
 docker compose logs -f <service-name>
-```
-
-### Docker Hub rate limit
-
-If image pulls fail with `toomanyrequests`, log into Docker Hub or wait a few minutes and retry:
-
-```bash
-docker compose up -d
 ```
