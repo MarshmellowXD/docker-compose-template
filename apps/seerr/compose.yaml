@@ -3,12 +3,10 @@ services:
     image: ghcr.io/seerr-team/seerr:latest
     container_name: seerr
     restart: unless-stopped
-    user: "${PUID}:${PGID}"
     init: true
+    user: "0:0"
     environment:
       TZ: ${TZ}
-      PUID: ${PUID}
-      PGID: ${PGID}
     expose:
       - 5055
     labels:
