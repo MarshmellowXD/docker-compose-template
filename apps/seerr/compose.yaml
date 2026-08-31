@@ -19,7 +19,7 @@ services:
     volumes:
       - ${DOCKER_DATA_DIR}/seerr:/app/config
     command: >
-      sh -c 'mkdir -p /app/config/logs && chown -R 1000:1000 /app/config && exec setpriv --reuid=1000 --regid=1000 --clear-groups /usr/local/bin/docker-entrypoint.sh npm start'
+      sh -c 'mkdir -p /app/config/logs && chown -R 1000:1000 /app/config && exec su -s /bin/sh node -c "/usr/local/bin/docker-entrypoint.sh npm start"'
     healthcheck:
       test: ["CMD-SHELL", "wget -q --tries=1 --spider http://127.0.0.1:5055/api/v1/status || exit 1"]
       interval: 60s
