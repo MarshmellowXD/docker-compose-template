@@ -4,7 +4,7 @@ services:
     container_name: seerr
     restart: unless-stopped
     init: true
-    user: "1000:1000"
+    user: "0:0"
     environment:
       TZ: ${TZ}
     expose:
@@ -17,7 +17,9 @@ services:
       - "traefik.http.routers.seerr.middlewares=tinyauth@docker"
       - "traefik.http.services.seerr.loadbalancer.server.port=5055"
     volumes:
-      - seerr_config:/app/config
+      - ${DOCKER_DATA_DIR}/seerr:/app/config
+    command: >
+      sh -c 'mkdir -p /app/config/logs && chown -R 1000:1000 /app/config && exec setpriv --reuid=1000 --regid=1000 --clear-groups /usr/local/bin/docker-entrypoint.sh npm start'
     healthcheck:
       test: ["CMD-SHELL", "wget -q --tries=1 --spider http://127.0.0.1:5055/api/v1/status || exit 1"]
       interval: 60s
@@ -36,6 +38,3 @@ services:
       - seerr
       - arr
       - all
-
-volumes:
-  seerr_config:
