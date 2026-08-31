@@ -91,22 +91,24 @@ TINYAUTH_SECRET=<second output>
 
 ### First user
 
-Generate a password hash:
+Create a local user with the Tinyauth CLI:
 
 ```bash
-htpasswd -nbB yourusername yourpassword
+docker run -i -t --rm ghcr.io/tinyauthapp/tinyauth:v5 user create --interactive
 ```
 
-Output looks like:
+Enter your username and password. When asked for the format, pick **format for docker**.
 
-```
-yourusername:$2y$05$abcdefghijklmnopqrstuvwxyz123456789
+The output looks like:
+
+```text
+user:$$2a$$10$UdLYoJ5lgPsC0RKqYH/jMua7zIn0g9kPqWmhYayJYLaZQ/FTmH2/u
 ```
 
-Paste only the part after the colon, doubling `$` to `$$`:
+Paste it into `.env`:
 
 ```env
-TINYAUTH_AUTH_USERS=yourusername:$$2y$$05$$abcdefghijklmnopqrstuvwxyz123456789
+TINYAUTH_AUTH_USERS=user:$$2a$$10$UdLYoJ5lgPsC0RKqYH/jMua7zIn0g9kPqWmhYayJYLaZQ/FTmH2/u
 ```
 
 ### Choose services
