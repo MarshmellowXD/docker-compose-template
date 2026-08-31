@@ -4,7 +4,6 @@ services:
     container_name: seerr
     restart: unless-stopped
     init: true
-    user: "0:0"
     environment:
       TZ: ${TZ}
     expose:
@@ -17,7 +16,7 @@ services:
       - "traefik.http.routers.seerr.middlewares=tinyauth@docker"
       - "traefik.http.services.seerr.loadbalancer.server.port=5055"
     volumes:
-      - ${DOCKER_DATA_DIR}/seerr:/app/config
+      - seerr_config:/app/config
     healthcheck:
       test: ["CMD-SHELL", "wget -q --tries=1 --spider http://127.0.0.1:5055/api/v1/status || exit 1"]
       interval: 60s
@@ -36,3 +35,6 @@ services:
       - seerr
       - arr
       - all
+
+volumes:
+  seerr_config:
