@@ -29,7 +29,7 @@ services:
       TINYAUTH_APPS_aiostreams_CONFIG_DOMAIN: ${AIOSTREAMS_HOSTNAME?}
       TINYAUTH_APPS_aiostreams_PATH_ALLOW: ^/stremio/|^/api/v1/usenet/stream/|^/api/v1/debrid/playback/
       TINYAUTH_APPS_aiometadata_CONFIG_DOMAIN: ${AIOMETADATA_HOSTNAME?}
-      TINYAUTH_APPS_aiometadata_PATH_ALLOW: ^/(manifest\.json|stream/|catalog/|meta/)|^/stremio/.+/(manifest\.json|stream/|catalog/|meta/)
+      TINYAUTH_APPS_aiometadata_PATH_ALLOW: ^/(manifest\.json|stream/|catalog/|meta/)|^/stremio/[^/]+/(manifest\.json|stream/|catalog/|meta/)
       TINYAUTH_APPS_stremthru_CONFIG_DOMAIN: ${STREMTHRU_HOSTNAME?}
       TINYAUTH_APPS_stremthru_PATH_ALLOW: ^/(v0/)?proxy/|^/stremio/[^/]+/(manifest\.json|stream/|catalog/|meta/)|^/stremio/addon_catalog/
     volumes:
